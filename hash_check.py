@@ -17,6 +17,10 @@ def generate_hashes(folder_path):
     hashes = {}
     for root, _, files in os.walk(folder_path):
         for filename in files:
+            # Skip desktop.ini files
+            if filename.lower() == 'desktop.ini':
+                continue
+
             filepath = os.path.join(root, filename)
             relative_path = os.path.relpath(filepath, folder_path)
             try:
@@ -62,8 +66,8 @@ def verify_hashes(folder_path, hash_file):
         else:
             missing.append(filepath)
     
-    # Check for new files
-    new = [f for f in current_hashes if f not in saved_hashes]
+    # Check for new files, excluding desktop.ini
+    new = [f for f in current_hashes if f not in saved_hashes and os.path.basename(f).lower() != 'desktop.ini']
     
     # Print results
     print("\nVerification Results:")

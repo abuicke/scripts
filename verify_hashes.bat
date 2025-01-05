@@ -31,6 +31,11 @@ if not exist "C:\Users\buick\hashes" (
 echo Using base path: !BASE_PATH!
 echo.
 
+echo Verifying hashes for Desktop
+python C:\Users\buick\scripts\hash_check.py !BASE_PATH!\Desktop\ --verify C:\Users\buick\hashes\desktop-hashes.json
+echo.
+echo.
+echo.
 echo Verifying hashes for Pictures
 python C:\Users\buick\scripts\hash_check.py !BASE_PATH!\Pictures\ --verify C:\Users\buick\hashes\picture-hashes.json
 echo.

@@ -8,6 +8,8 @@ if exist "C:\Users\buick\hashes" (
     echo Created directory: C:\Users\buick\hashes
 )
 
+echo Generating hashes for Desktop
+python C:\Users\buick\scripts\hash_check.py C:\Users\buick\Desktop\ --generate C:\Users\buick\hashes\desktop-hashes.json
 echo Generating hashes for Pictures
 python C:\Users\buick\scripts\hash_check.py C:\Users\buick\Pictures\ --generate C:\Users\buick\hashes\picture-hashes.json
 echo Generating hashes for Documents

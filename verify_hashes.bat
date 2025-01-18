@@ -11,7 +11,7 @@ if /i "%1"=="local" (
     set "BASE_PATH=C:\Users\buick"
     set "GNUPG_PATH=!BASE_PATH!\AppData\Roaming\gnupg"
 ) else if /i "%1"=="HDD" (
-    set "BASE_PATH=D:\laptop"
+    set "BASE_PATH=E:\laptop"
     set "GNUPG_PATH=!BASE_PATH!\gnupg"
 ) else if /i "%1"=="SSD" (
     set "BASE_PATH=D:\laptop"

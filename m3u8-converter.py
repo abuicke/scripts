@@ -3,8 +3,6 @@ import os
 import sys
 from urllib.parse import urlparse
 import argparse
-from tqdm import tqdm
-import time
 
 def is_url(string):
     """Check if the given string is a URL."""
@@ -14,20 +12,14 @@ def is_url(string):
     except ValueError:
         return False
 
-def get_duration(input_path):
-    """Get the duration of the video stream."""
-    cmd = [
-        'ffprobe',
-        '-v', 'error',
-        '-show_entries', 'format=duration',
-        '-of', 'default=noprint_wrappers=1:nokey=1',
-        input_path
-    ]
-    
+def read_m3u8_content(filepath):
+    """Read the M3U8 file to check if it's a local or remote stream."""
     try:
-        output = subprocess.check_output(cmd).decode().strip()
-        return float(output)
-    except:
+        with open(filepath, 'r') as f:
+            content = f.read()
+            return content
+    except Exception as e:
+        print(f"Error reading M3U8 file: {e}")
         return None
 
 def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
@@ -48,70 +40,65 @@ def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
     if os.path.exists(output_path) and not overwrite:
         raise FileExistsError(f"Output file {output_path} already exists. Use --overwrite to force conversion.")
 
-    # Basic ffmpeg command
+    # Enhanced ffmpeg command for HLS streams
     cmd = [
         'ffmpeg',
+        '-protocol_whitelist', 'file,http,https,tcp,tls,crypto',  # Allow various protocols
         '-i', input_path,
         '-c', 'copy',  # Copy streams without re-encoding
         '-bsf:a', 'aac_adtstoasc',  # Fix audio streams
         '-movflags', '+faststart',  # Enable fast start for web playback
+        '-f', 'mp4',  # Force MP4 format
         '-y' if overwrite else '-n',  # Overwrite output if specified
         output_path
     ]
 
-    # If input is a URL, add HTTP options
-    if is_url(input_path):
-        cmd[1:1] = [
-            '-protocol_whitelist', 'file,http,https,tcp,tls,crypto',
-            '-reconnect', '1',
-            '-reconnect_streamed', '1',
-            '-reconnect_delay_max', '20'
-        ]
-
     try:
-        # Start conversion
+        print(f"Converting {input_path} to {output_path}")
+        print("This may take a while depending on the file size...")
+        
+        # Start conversion with more detailed error output
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-
-        # Get video duration for progress bar
-        duration = get_duration(input_path)
-        if duration:
-            print(f"Video duration: {duration:.2f} seconds")
-            pbar = tqdm(total=100, desc="Converting", unit="%")
-            
-            # Monitor progress
-            last_progress = 0
-            while True:
-                output = process.stderr.readline()
-                if output == '' and process.poll() is not None:
-                    break
-                    
-                if 'time=' in output:
-                    time_str = output.split('time=')[1].split()[0]
-                    hours, minutes, seconds = map(float, time_str.split(':'))
-                    current_time = hours * 3600 + minutes * 60 + seconds
-                    progress = min(100, int(100 * current_time / duration))
-                    
-                    if progress > last_progress:
-                        pbar.update(progress - last_progress)
-                        last_progress = progress
-            
-            pbar.close()
         
-        # Wait for completion
-        process.communicate()
+        # Monitor the process and print progress
+        while True:
+            output = process.stderr.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                # Only print progress lines containing time or speed information
+                if 'time=' in output or 'speed=' in output:
+                    print(output.strip())
         
-        if process.returncode == 0:
+        # Get the return code
+        returncode = process.poll()
+        
+        if returncode == 0:
             print(f"\nSuccessfully converted {input_path} to {output_path}")
         else:
-            raise subprocess.CalledProcessError(process.returncode, cmd)
+            # Check if the input file exists and is readable
+            if not os.path.exists(input_path):
+                raise FileNotFoundError(f"Input file {input_path} not found")
+            
+            # Try to read the M3U8 content to provide more detailed error information
+            content = read_m3u8_content(input_path)
+            if content and not any(line.strip().endswith('.ts') for line in content.splitlines()):
+                raise ValueError("The M3U8 file doesn't contain any .ts segments. It might be a master playlist or invalid.")
+            
+            raise subprocess.CalledProcessError(returncode, cmd)
             
     except subprocess.CalledProcessError as e:
         print(f"Error during conversion: {e}")
+        print("\nThis might be because:")
+        print("1. The M3U8 file might be a master playlist (contains multiple quality options)")
+        print("2. The stream segments (.ts files) are not accessible")
+        print("3. The M3U8 file might be corrupted or invalid")
+        print("\nTry checking the content of your M3U8 file to ensure it's a valid stream.")
         raise
     except FileNotFoundError:
         print("ffmpeg not found. Please install ffmpeg and make sure it's in your system PATH.")

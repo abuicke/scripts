@@ -4,23 +4,19 @@ import sys
 from urllib.parse import urlparse
 import argparse
 
-def is_url(string):
-    """Check if the given string is a URL."""
-    try:
-        result = urlparse(string)
-        return all([result.scheme, result.netloc])
-    except ValueError:
-        return False
-
-def read_m3u8_content(filepath):
-    """Read the M3U8 file to check if it's a local or remote stream."""
-    try:
-        with open(filepath, 'r') as f:
-            content = f.read()
-            return content
-    except Exception as e:
-        print(f"Error reading M3U8 file: {e}")
-        return None
+def verify_ts_segments(m3u8_path):
+    """Verify that all .ts segments referenced in the M3U8 file exist."""
+    directory = os.path.dirname(m3u8_path)
+    missing_segments = []
+    
+    with open(m3u8_path, 'r') as f:
+        for line in f:
+            if line.strip().endswith('.ts'):
+                ts_path = os.path.join(directory, line.strip())
+                if not os.path.exists(ts_path):
+                    missing_segments.append(line.strip())
+    
+    return missing_segments
 
 def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
     """
@@ -40,15 +36,23 @@ def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
     if os.path.exists(output_path) and not overwrite:
         raise FileExistsError(f"Output file {output_path} already exists. Use --overwrite to force conversion.")
 
-    # Enhanced ffmpeg command for HLS streams
+    # Check for missing .ts segments
+    missing_segments = verify_ts_segments(input_path)
+    if missing_segments:
+        print("Warning: The following .ts segments are missing:")
+        for segment in missing_segments:
+            print(f"  - {segment}")
+        print("\nPlease ensure all .ts files are in the same directory as the M3U8 file.")
+        return
+
+    # Basic ffmpeg command
     cmd = [
         'ffmpeg',
-        '-protocol_whitelist', 'file,http,https,tcp,tls,crypto',  # Allow various protocols
+        '-allowed_extensions', 'ALL',  # Allow all extensions
         '-i', input_path,
         '-c', 'copy',  # Copy streams without re-encoding
         '-bsf:a', 'aac_adtstoasc',  # Fix audio streams
         '-movflags', '+faststart',  # Enable fast start for web playback
-        '-f', 'mp4',  # Force MP4 format
         '-y' if overwrite else '-n',  # Overwrite output if specified
         output_path
     ]
@@ -57,7 +61,7 @@ def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
         print(f"Converting {input_path} to {output_path}")
         print("This may take a while depending on the file size...")
         
-        # Start conversion with more detailed error output
+        # Start conversion
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -71,34 +75,21 @@ def convert_m3u8_to_mp4(input_path, output_path, overwrite=False):
             if output == '' and process.poll() is not None:
                 break
             if output:
-                # Only print progress lines containing time or speed information
-                if 'time=' in output or 'speed=' in output:
-                    print(output.strip())
+                print(output.strip())
         
-        # Get the return code
         returncode = process.poll()
         
         if returncode == 0:
             print(f"\nSuccessfully converted {input_path} to {output_path}")
         else:
-            # Check if the input file exists and is readable
-            if not os.path.exists(input_path):
-                raise FileNotFoundError(f"Input file {input_path} not found")
-            
-            # Try to read the M3U8 content to provide more detailed error information
-            content = read_m3u8_content(input_path)
-            if content and not any(line.strip().endswith('.ts') for line in content.splitlines()):
-                raise ValueError("The M3U8 file doesn't contain any .ts segments. It might be a master playlist or invalid.")
-            
             raise subprocess.CalledProcessError(returncode, cmd)
             
     except subprocess.CalledProcessError as e:
         print(f"Error during conversion: {e}")
         print("\nThis might be because:")
-        print("1. The M3U8 file might be a master playlist (contains multiple quality options)")
-        print("2. The stream segments (.ts files) are not accessible")
-        print("3. The M3U8 file might be corrupted or invalid")
-        print("\nTry checking the content of your M3U8 file to ensure it's a valid stream.")
+        print("1. The .ts segments are not in the same directory as the M3U8 file")
+        print("2. The .ts segments have different names than what's listed in the M3U8 file")
+        print("3. There might be permission issues accessing the files")
         raise
     except FileNotFoundError:
         print("ffmpeg not found. Please install ffmpeg and make sure it's in your system PATH.")

@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableDelayedExpansion
-
+echo Start time: %TIME%
 if "%1"=="" (
     echo Error: Please specify a location [local^|HDD^|SSD]
     echo Example: verify_hashes.bat local
@@ -73,4 +73,5 @@ echo.
 echo.
 
 echo Hash verification complete
+echo End time: %TIME%
 pause

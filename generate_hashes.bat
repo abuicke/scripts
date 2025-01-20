@@ -1,4 +1,5 @@
 @echo off
+echo Start time: %TIME%
 if exist "C:\Users\buick\hashes" (
     echo Error: The 'hashes' directory already exists.
     pause
@@ -26,4 +27,5 @@ echo Generating hashes for gnupg
 python C:\Users\buick\scripts\hash_check.py C:\Users\buick\AppData\Roaming\gnupg\ --generate C:\Users\buick\hashes\gnupg.json
 
 echo Hash generation complete
+echo End time: %TIME%
 pause

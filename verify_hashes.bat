@@ -68,6 +68,9 @@ echo.
 echo.
 echo Verifying hashes for gnupg
 python C:\Users\buick\scripts\hash_check.py !GNUPG_PATH!\ --verify C:\Users\buick\hashes\gnupg.json
+echo.
+echo.
+echo.
 
 echo Hash verification complete
 pause

@@ -48,5 +48,10 @@ echo ===== Videos =====
 rclone sync C:\Users\buick\Videos D:\Videos --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
 echo.
 
+echo Proceed with sync?
+pause
+
+echo Syncing...
+
 echo End time: %TIME%
 pause

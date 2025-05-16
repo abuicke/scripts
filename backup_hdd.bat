@@ -16,10 +16,12 @@ echo.
 echo Proceed with sync?
 pause
 
-rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg D:\gnupg
+rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg
 
 
 
+echo.
+echo.
 echo.
 echo ===== .gnupg =====
 rclone sync C:\Users\buick\.gnupg D:\.gnupg --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
@@ -33,6 +35,8 @@ rclone sync C:\Users\buick\.gnupg D:\.gnupg
 
 
 echo.
+echo.
+echo.
 echo ===== bin =====
 rclone sync C:\Users\buick\bin D:\bin --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
 echo.
@@ -44,6 +48,8 @@ rclone sync C:\Users\buick\bin D:\bin
 
 
 
+echo.
+echo.
 echo.
 echo ===== Desktop =====
 rclone sync C:\Users\buick\Desktop D:\Desktop --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
@@ -57,17 +63,21 @@ rclone sync C:\Users\buick\Desktop D:\Desktop
 
 
 echo.
+echo.
+echo.
 echo ===== Documents =====
-rclone sync C:\Users\buick\Documents D:\Documents --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
+rclone sync C:\Users\buick\Documents D:\Documents --dry-run --exclude "My Pictures" --exclude "My Music" --exclude "My Videos" 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
 echo.
 
 echo Proceed with sync?
 pause
 
-rclone sync C:\Users\buick\Documents D:\Documents
+rclone sync C:\Users\buick\Documents D:\Documents --exclude "My Pictures" --exclude "My Music" --exclude "My Videos"
 
 
 
+echo.
+echo.
 echo.
 echo ===== Music =====
 rclone sync C:\Users\buick\Music D:\Music --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
@@ -81,6 +91,8 @@ rclone sync C:\Users\buick\Music D:\Music
 
 
 echo.
+echo.
+echo.
 echo ===== Pictures =====
 rclone sync C:\Users\buick\Pictures D:\Pictures --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
 echo.
@@ -93,6 +105,8 @@ rclone sync C:\Users\buick\Pictures D:\Pictures
 
 
 echo.
+echo.
+echo.
 echo ===== Videos =====
 rclone sync C:\Users\buick\Videos D:\Videos --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
 echo.
@@ -103,7 +117,8 @@ pause
 rclone sync C:\Users\buick\Videos D:\Videos
 
 
-
+echo.
+echo.
+echo.
 echo Sync complete...
 echo End time: %TIME%
-pause

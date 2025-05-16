@@ -51,7 +51,49 @@ echo.
 echo Proceed with sync?
 pause
 
+echo.
 echo Syncing...
+echo.
+
+echo.
+echo ===== gnupg =====
+rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg D:\gnupg
+echo.
+
+echo.
+echo ===== .gnupg =====
+rclone sync C:\Users\buick\.gnupg D:\.gnupg
+echo.
+
+echo.
+echo ===== bin =====
+rclone sync C:\Users\buick\bin D:\bin
+echo.
+
+echo.
+echo ===== Desktop =====
+rclone sync C:\Users\buick\Desktop D:\Desktop
+echo.
+
+echo.
+echo ===== Documents =====
+rclone sync C:\Users\buick\Documents D:\Documents
+echo.
+
+echo.
+echo ===== Music =====
+rclone sync C:\Users\buick\Music D:\Music
+echo.
+
+echo.
+echo ===== Pictures =====
+rclone sync C:\Users\buick\Pictures D:\Pictures
+echo.
+
+echo.
+echo ===== Videos =====
+rclone sync C:\Users\buick\Videos D:\Videos
+echo.
 
 echo End time: %TIME%
 pause

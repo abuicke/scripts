@@ -21,7 +21,7 @@ echo.
 echo.
 echo.
 echo ===== Desktop =====
-rclone sync C:\Users\buick\Desktop proton:\Desktop --exclude "desktop.ini" --exclude ".tmp.driveupload"
+rclone sync C:\Users\buick\Desktop proton:\Desktop --exclude "desktop.ini" --exclude ".tmp.driveupload/**"
 
 echo.
 echo.

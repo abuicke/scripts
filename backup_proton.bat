@@ -21,31 +21,31 @@ echo.
 echo.
 echo.
 echo ===== Desktop =====
-rclone sync C:\Users\buick\Desktop proton:\Desktop
+rclone sync C:\Users\buick\Desktop proton:\Desktop --exclude "desktop.ini"
 
 echo.
 echo.
 echo.
 echo ===== Documents =====
-rclone sync C:\Users\buick\Documents proton:\Documents --exclude "My Pictures" --exclude "My Music" --exclude "My Videos"
+rclone sync C:\Users\buick\Documents proton:\Documents --exclude "desktop.ini" --exclude "My Pictures" --exclude "My Music" --exclude "My Videos"
 
 echo.
 echo.
 echo.
 echo ===== Music =====
-rclone sync C:\Users\buick\Music proton:\Music
+rclone sync C:\Users\buick\Music proton:\Music --exclude "desktop.ini"
 
 echo.
 echo.
 echo.
 echo ===== Pictures =====
-rclone sync C:\Users\buick\Pictures proton:\Pictures
+rclone sync C:\Users\buick\Pictures proton:\Pictures --exclude "desktop.ini"
 
 echo.
 echo.
 echo.
 echo ===== Videos =====
-rclone sync C:\Users\buick\Videos proton:\Videos
+rclone sync C:\Users\buick\Videos proton:\Videos --exclude "desktop.ini"
 
 echo.
 echo.

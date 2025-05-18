@@ -21,31 +21,31 @@ echo.
 echo.
 echo.
 echo ===== Desktop =====
-rclone sync C:\Users\buick\Desktop proton:\Desktop -v --exclude "desktop.ini" --exclude ".tmp.driveupload/**"
+rclone sync C:\Users\buick\Desktop proton:\Desktop -v --exclude "~*" --exclude "desktop.ini" --exclude ".tmp.driveupload/**"
 
 echo.
 echo.
 echo.
 echo ===== Documents =====
-rclone sync C:\Users\buick\Documents proton:\Documents -v --exclude "desktop.ini" --exclude "My Pictures" --exclude "My Music" --exclude "My Videos"
+rclone sync C:\Users\buick\Documents proton:\Documents -v --exclude "~*" --exclude "desktop.ini" --exclude "My Pictures" --exclude "My Music" --exclude "My Videos"
 
 echo.
 echo.
 echo.
 echo ===== Music =====
-rclone sync C:\Users\buick\Music proton:\Music -v --exclude "desktop.ini"
+rclone sync C:\Users\buick\Music proton:\Music -v --exclude "~*" --exclude "desktop.ini"
 
 echo.
 echo.
 echo.
 echo ===== Pictures =====
-rclone sync C:\Users\buick\Pictures proton:\Pictures -v --exclude "desktop.ini"
+rclone sync C:\Users\buick\Pictures proton:\Pictures -v --exclude "~*" --exclude "desktop.ini"
 
 echo.
 echo.
 echo.
 echo ===== Videos =====
-rclone sync C:\Users\buick\Videos proton:\Videos -v --exclude "desktop.ini"
+rclone sync C:\Users\buick\Videos proton:\Videos -v --exclude "~*" --exclude "desktop.ini"
 
 echo.
 echo.

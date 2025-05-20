@@ -1,15 +1,17 @@
 @echo off
+echo.
 echo Start time: %TIME%
+echo.
+echo.
 
+echo ===== .gnupg =====
+rclone sync C:\Users\buick\.gnupg google:\.gnupg -v
+
+echo.
+echo.
 echo.
 echo ===== gnupg =====
 rclone sync C:\Users\buick\AppData\Roaming\gnupg google:\gnupg -v
-
-echo.
-echo.
-echo.
-echo ===== .gnupg =====
-rclone sync C:\Users\buick\.gnupg google:\.gnupg -v
 
 echo.
 echo.
@@ -50,5 +52,5 @@ rclone sync C:\Users\buick\Videos google:\Videos -v --exclude "~*" --exclude "de
 echo.
 echo.
 echo.
-echo Sync complete...
+echo Sync complete
 echo End time: %TIME%

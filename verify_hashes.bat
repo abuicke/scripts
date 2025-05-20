@@ -1,11 +1,12 @@
 @echo off
-setlocal EnableDelayedExpansion
+echo.
 echo Start time: %TIME%
+echo.
+echo.
 
 if not exist "C:\Users\buick\hashes" (
-    echo Error: The 'hashes' directory does not exist at C:\Users\buick
-    echo Please create the directory before running this script.
-    pause
+    echo ERROR: The 'hashes' directory does not exist at C:\Users\buick
+    echo Run generate_hashes.bat before running this script.
     exit /b 1
 )
 
@@ -52,4 +53,3 @@ echo.
 
 echo Hash verification complete
 echo End time: %TIME%
-pause

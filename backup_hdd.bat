@@ -1,27 +1,20 @@
 @echo off
+echo.
 echo Start time: %TIME%
+echo.
+echo.
 
-REM Make sure D:\ is my external hard drive by looking for the .HDD file in the root directory
-if not exist "D:\HDD" (
-    echo ERROR: Couldn't find HDD file in D:\
-    pause
-    exit /b
+if not exist "D:\" (
+    echo ERROR: Couldn't find drive D:\
+    echo Exiting...
+    exit /b 1
 )
 
-echo.
-echo ===== gnupg =====
-rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
-echo.
+if not exist "D:\HDD" (
+    echo ERROR: Couldn't verify identity of drive D:\
+    exit /b 1
+)
 
-echo Proceed with sync?
-pause
-
-rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg
-
-
-
-echo.
-echo.
 echo.
 echo ===== .gnupg =====
 rclone sync C:\Users\buick\.gnupg D:\.gnupg --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
@@ -31,6 +24,20 @@ echo Proceed with sync?
 pause
 
 rclone sync C:\Users\buick\.gnupg D:\.gnupg
+
+
+
+echo.
+echo.
+echo.
+echo ===== gnupg =====
+rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg --dry-run 2>&1 | gawk "!/NOTICE:/ || /Skipped (copy|delete)/" | sed -e "/Skipped copy/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/COPY: \1/" -e "/Skipped delete/ s/^[0-9\/:\ ]*NOTICE: \(.*\): Skipped.*/DELETE: \1/"
+echo.
+
+echo Proceed with sync?
+pause
+
+rclone sync C:\Users\buick\AppData\Roaming\gnupg D:\gnupg
 
 
 
@@ -120,5 +127,5 @@ rclone sync C:\Users\buick\Videos D:\Videos --exclude "~*" --exclude "desktop.in
 echo.
 echo.
 echo.
-echo Sync complete...
+echo Sync complete
 echo End time: %TIME%

@@ -18,7 +18,7 @@ if not exist "D:\HDD" (
 
 if not exist "D:\hashes" (
     echo ERROR: The 'hashes' directory does not exist at D:\hashes
-    echo Please run generate_hashes.bat before running this script.
+    echo Run generate_hashes.bat before running this script.
     echo Exiting...
     exit /b 1
 )

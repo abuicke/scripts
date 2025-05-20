@@ -9,6 +9,21 @@ if not exist "C:\Users\buick\hashes" (
     exit /b 1
 )
 
+echo Verifying hashes for .gnupg
+python C:\Users\buick\scripts\hash_check.py C:\Users\buick\.gnupg\ --verify C:\Users\buick\hashes\dotgnupg.json
+echo.
+echo.
+echo.
+echo Verifying hashes for gnupg
+python C:\Users\buick\scripts\hash_check.py C:\Users\buick\AppData\Roaming\gnupg\ --verify C:\Users\buick\hashes\gnupg.json
+echo.
+echo.
+echo.
+echo Verifying hashes for bin
+python C:\Users\buick\scripts\hash_check.py C:\Users\buick\bin\ --verify C:\Users\buick\hashes\bin-hashes.json
+echo.
+echo.
+echo.
 echo Verifying hashes for Desktop
 python C:\Users\buick\scripts\hash_check.py C:\Users\buick\Desktop\ --verify C:\Users\buick\hashes\desktop-hashes.json
 echo.
@@ -31,21 +46,6 @@ echo.
 echo.
 echo Verifying hashes for Videos
 python C:\Users\buick\scripts\hash_check.py C:\Users\buick\Videos\ --verify C:\Users\buick\hashes\video-hashes.json
-echo.
-echo.
-echo.
-echo Verifying hashes for bin
-python C:\Users\buick\scripts\hash_check.py C:\Users\buick\bin\ --verify C:\Users\buick\hashes\bin-hashes.json
-echo.
-echo.
-echo.
-echo Verifying hashes for .gnupg
-python C:\Users\buick\scripts\hash_check.py C:\Users\buick\.gnupg\ --verify C:\Users\buick\hashes\dotgnupg.json
-echo.
-echo.
-echo.
-echo Verifying hashes for gnupg
-python C:\Users\buick\scripts\hash_check.py C:\Users\buick\AppData\Roaming\gnupg\ --verify C:\Users\buick\hashes\gnupg.json
 echo.
 echo.
 echo.
